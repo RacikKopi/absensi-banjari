@@ -337,5 +337,67 @@ const daftarSiswa = [
       });
     });
   </script>
+  // Variable kosong yang nantinya diisi otomatis dari Google Sheets
+let dataSiswaPerKelas = {};
+
+const selectKelas = document.getElementById('kelas');
+const selectNama = document.getElementById('nama');
+
+// Disable pilihan nama sebelum data berhasil dimuat
+selectNama.disabled = true;
+
+// =========================================================================
+// FUNGSI MENGAMBIL DATA DARI GOOGLE SHEETS VIA API
+// =========================================================================
+function muatDataSiswaOtomatis() {
+  // Ubah teks opsi sementara
+  selectNama.innerHTML = '<option value="" disabled selected>Sedang memuat data dari Google Sheets...</option>';
+
+  fetch(SCRIPT_URL)
+    .then(response => response.json())
+    .then(res => {
+      if (res.result === "success") {
+        dataSiswaPerKelas = res.data; // Menyimpan data dari Sheets ke variabel
+        selectNama.innerHTML = '<option value="" disabled selected>-- Pilih Kelas Terlebih Dahulu --</option>';
+        console.log("Data siswa berhasil diambil dari Google Sheets:", dataSiswaPerKelas);
+      } else {
+        alert("Gagal memuat data siswa: " + res.message);
+      }
+    })
+    .catch(error => {
+      console.error("Error saat memuat data:", error);
+      selectNama.innerHTML = '<option value="" disabled selected>Gagal memuat data siswa</option>';
+    });
+}
+
+// Jalankan fungsi pengambilan data begitu halaman selesai dimuat (loaded)
+document.addEventListener('DOMContentLoaded', muatDataSiswaOtomatis);
+
+// =========================================================================
+// EVENT LISTENER KETIKA KELAS DIPILIH
+// =========================================================================
+selectKelas.addEventListener('change', function() {
+  const kelasDipilih = this.value;
+
+  selectNama.innerHTML = '<option value="" disabled selected>-- Pilih Nama Siswa --</option>';
+
+  const daftarSiswa = dataSiswaPerKelas[kelasDipilih] || [];
+
+  if (daftarSiswa.length > 0) {
+    selectNama.disabled = false;
+    daftarSiswa.forEach(nama => {
+      const option = document.createElement('option');
+      option.value = nama;
+      option.textContent = nama;
+      selectNama.appendChild(option);
+    });
+  } else {
+    selectNama.disabled = true;
+    const option = document.createElement('option');
+    option.textContent = "Tidak ada siswa di kelas ini";
+    option.disabled = true;
+    selectNama.appendChild(option);
+  }
+});
 </body>
 </html>
