@@ -337,7 +337,7 @@ const daftarSiswa = [
       });
     });
   </script
-      // Variable kosong yang nantinya diisi otomatis dari Google Sheets
+  // Variable kosong yang nantinya diisi otomatis dari Google Sheets
 let dataSiswaPerKelas = {};
 
 const selectKelas = document.getElementById('kelas');
@@ -353,7 +353,7 @@ function muatDataSiswaOtomatis() {
   // Ubah teks opsi sementara
   selectNama.innerHTML = '<option value="" disabled selected>Sedang memuat data dari Google Sheets...</option>';
 
-  fetch(SCRIPT_URL)
+  fetch(https://script.google.com/macros/s/AKfycbybopI6oOZc01sHdYiqAJtoxboRRFo4yCrn7moxQkCc-GxrKygnmsyc3eLaTGwYnyE1/exec)
     .then(response => response.json())
     .then(res => {
       if (res.result === "success") {
@@ -399,6 +399,5 @@ selectKelas.addEventListener('change', function() {
     selectNama.appendChild(option);
   }
 });>
-
 </body>
 </html>
